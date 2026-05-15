@@ -84,3 +84,7 @@ _testmain.go
 #*.png
 #*.jpeg
 *.psd
+
+
+# claude
+.claude/
