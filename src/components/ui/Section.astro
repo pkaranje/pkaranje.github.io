@@ -1,0 +1,6 @@
+---
+type Props = { id?: string; class?: string };
+const { id, class: className = "" } = Astro.props;
+---
+
+<section id={id} class={`relative z-[2] py-[clamp(56px,7vw,88px)] ${className}`}><slot /></section>

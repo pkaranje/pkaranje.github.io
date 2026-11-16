@@ -1,0 +1,39 @@
+---
+import Base from "@/layouts/Base.astro";
+import Container from "@/components/ui/Container.astro";
+import ButtonLink from "@/components/ui/ButtonLink.astro";
+import { NAV } from "@/lib/site";
+
+const meta = {
+  path: "/404/",
+  title: "Page not found",
+  description: "This page doesn't exist. Head back to the home page.",
+  noindex: true,
+};
+---
+
+<Base meta={meta}>
+  <section class="relative z-[2] flex min-h-[70vh] items-center py-24">
+    <Container class="relative">
+      <p class="text-[0.78rem] font-medium uppercase tracking-[0.14em] text-faint">Error 404</p>
+      <h1 class="t-hero mt-5 max-w-[16ch]">That page isn&rsquo;t <span class="serif accent">here.</span></h1>
+      <p class="t-lead mt-5">The link may be out of date, or the page may have moved.</p>
+      <div class="mt-9 flex flex-wrap gap-3.5">
+        <ButtonLink href="/">Back to the homepage</ButtonLink>
+        <ButtonLink href="/#contact" variant="ghost">Get in touch</ButtonLink>
+      </div>
+      <nav aria-label="Sections" class="mt-12 flex flex-wrap gap-2.5">
+        {
+          NAV.map((item) => (
+            <a
+              href={`/#${item.id}`}
+              class="rounded-full border border-line-strong px-4 py-2 text-[0.85rem] text-muted transition-colors hover:border-accent hover:text-accent-ink"
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </Container>
+  </section>
+</Base>

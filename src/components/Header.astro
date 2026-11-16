@@ -1,0 +1,102 @@
+---
+import Container from "./ui/Container.astro";
+import Lockup from "./Lockup.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import { NAV } from "@/lib/site";
+---
+
+<header
+  data-header
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent transition-[background-color,border-color,backdrop-filter] duration-[400ms] data-scrolled:border-line data-scrolled:bg-[var(--glass)] data-scrolled:backdrop-blur-[14px]"
+>
+  <Container class="flex h-[76px] items-center justify-between gap-4">
+    <a href="/" class="shrink-0" aria-label="Home">
+      <Lockup />
+    </a>
+
+    <nav aria-label="Primary" class="hidden items-center gap-[30px] lg:flex">
+      {
+        NAV.map((item) => (
+          // Label rolls up to a duplicate of itself on hover; the script marks the section in view.
+          <a href={`/#${item.id}`} data-nav={item.id} class="group roll-link text-muted aria-[current=true]:font-medium aria-[current=true]:text-text">
+            <span class="roll-track">
+              <span class="h-[1.5em]">{item.label}</span>
+              <span class="h-[1.5em] text-text" aria-hidden="true">{item.label}</span>
+            </span>
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href="/#contact"
+        class="hidden rounded-full bg-accent px-[18px] py-[9px] text-[0.84rem] font-semibold text-on-accent transition-transform duration-300 hover:-translate-y-0.5 sm:inline-flex"
+      >
+        Get in touch
+      </a>
+      <ThemeToggle />
+      <button
+        type="button"
+        data-menu-button
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label="Open menu"
+        class="group grid h-9 w-9 place-items-center rounded-full border border-line-strong text-text transition-colors hover:border-accent-ink hover:text-accent-ink lg:hidden"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path class="group-aria-expanded:hidden" d="M3 6h18M3 12h18M3 18h18"></path>
+          <path class="hidden group-aria-expanded:inline" d="M18 6 6 18M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </Container>
+
+  <div id="mobile-nav" hidden class="border-t border-line bg-[var(--glass)] backdrop-blur-[14px] lg:hidden">
+    <Container class="flex flex-col py-2">
+      {
+        NAV.map((item) => (
+          <a href={`/#${item.id}`} data-mobile-link class="border-b border-line py-3.5 text-[0.95rem] text-muted last:border-b-0">
+            {item.label}
+          </a>
+        ))
+      }
+    </Container>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]")!;
+  const button = header.querySelector<HTMLButtonElement>("[data-menu-button]")!;
+  const menu = header.querySelector<HTMLElement>("#mobile-nav")!;
+
+  const onScroll = () => header.toggleAttribute("data-scrolled", window.scrollY > 12);
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  const setOpen = (open: boolean) => {
+    button.setAttribute("aria-expanded", String(open));
+    button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    menu.hidden = !open;
+  };
+  button.addEventListener("click", () => setOpen(button.getAttribute("aria-expanded") !== "true"));
+  menu.querySelectorAll("[data-mobile-link]").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+
+  // Highlight the nav link for the section currently in view.
+  const links = new Map(
+    [...header.querySelectorAll<HTMLAnchorElement>("[data-nav]")].map((a) => [a.dataset.nav!, a]),
+  );
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        links.forEach((a, id) => a.setAttribute("aria-current", String(id === entry.target.id)));
+      }
+    },
+    { rootMargin: "-45% 0px -50% 0px" },
+  );
+  links.forEach((_, id) => {
+    const section = document.getElementById(id);
+    if (section) observer.observe(section);
+  });
+</script>

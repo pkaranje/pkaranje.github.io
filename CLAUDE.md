@@ -1,120 +1,89 @@
 # CLAUDE.md — pkaranje.github.io
 
-Personal portfolio website for Pratik Karanje. Static site deployed to GitHub Pages via GitHub Actions.
+Personal portfolio website for Pratik Karanje. Static Astro site deployed to GitHub Pages via GitHub Actions. Architecture and design system are adapted from [giilab.github.io](https://github.com/giilab/giilab.github.io).
 
 ## Tech Stack
 
 | Layer | Tool |
-|---|---|
-| Framework | React 18 + TypeScript |
-| Build | Vite 4 |
-| Styling | Tailwind CSS 3 |
-| Animation | Framer Motion 12 |
-| Particles | @tsparticles/react + @tsparticles/slim |
-| Icons | lucide-react v1 (note: no `Github`/`Linkedin` icons — use `GitBranch`/`Link2`) |
-| Utilities | clsx + tailwind-merge → `cn()` at `src/lib/utils.ts` |
-| Deployment | GitHub Actions → GitHub Pages (`dist/`) |
+| --- | --- |
+| Framework | Astro 7 (static output, no UI framework, `.astro` components only) |
+| Language | TypeScript (strict, `astro/tsconfigs/strict`) |
+| Styling | Tailwind CSS 4 via `@tailwindcss/vite` — config lives in `src/styles/globals.css` (`@theme inline`), there is no `tailwind.config.js` |
+| Fonts | `@fontsource` — Space Grotesk (body), Urbanist (display), Instrument Serif italic (accent) |
+| Smooth scroll | Lenis (`src/components/BackToTop.astro`) |
+| Lint | ESLint 10 flat config + `typescript-eslint` + `eslint-plugin-astro` |
+| Node | 22 (`.nvmrc`), CI uses `node-version-file` |
 
 ## Commands
 
 ```bash
-npm run dev        # start dev server at localhost:5173
-npm run build      # tsc type-check + vite build → dist/
-npm run preview    # preview production build at localhost:4173
+npm run dev        # dev server at localhost:4321
+npm run build      # astro build → dist/
+npm run preview    # serve dist/
+npm run lint       # eslint
+npm run typecheck  # astro check
 ```
 
-Always run `npm run build` after making changes to confirm zero TypeScript errors before committing.
+Or use `make` (run `make` alone to list targets): `make setup`, `make dev`, `make check`, `make build`, `make preview`, `make ci`, `make clean`.
+
+Always run `npm run lint && npm run typecheck && npm run build` before committing — CI runs all three.
 
 ## Project Structure
 
-```
+```text
 src/
-├── App.tsx                          # Root — composes Navbar + all sections
-├── index.css                        # Tailwind directives + dot-grid utility class
-├── main.tsx                         # React entry point
-├── data/
-│   └── resume.ts                    # ★ Single source of truth for ALL content
-├── lib/
-│   └── utils.ts                     # cn() helper (clsx + twMerge)
-└── components/
-    ├── Navbar.tsx                   # Fixed top nav, active section tracking
-    ├── ui/
-    │   └── sparkles.tsx             # SparklesCore (tsparticles wrapper)
-    └── sections/
-        ├── Hero.tsx                 # Two-column card: text left / photo right
-        ├── Skills.tsx               # 8 skill category cards
-        ├── Experience.tsx           # Work history cards
-        ├── Certifications.tsx       # Certs + education + languages
-        ├── Projects.tsx             # 6 project cards
-        └── Contact.tsx              # Contact link cards + email CTA
+├── data/resume.ts            # ★ Single source of truth for ALL résumé content
+├── lib/site.ts               # SITE config (url, résumé paths, theme key), NAV anchors, PageMeta, bareUrl()
+├── lib/enquiry.ts            # Enquiry form delivery via Web3Forms (public ACCESS_KEY) + send()
+├── styles/globals.css        # Tailwind import, brand + semantic tokens, light/dark themes, component classes
+├── layouts/Base.astro        # <head>/SEO/JSON-LD (Person), theme bootstrap, Header/Footer, scroll-reveal script
+├── components/
+│   ├── Header.astro          # Fixed nav, anchor links, active-section tracking, mobile menu
+│   ├── Footer.astro
+│   ├── Lockup.astro          # "PK" monogram + name
+│   ├── ThemeToggle.astro     # Light/dark toggle (persists to localStorage key SITE.themeKey)
+│   ├── BackToTop.astro       # Lenis + back-to-top button
+│   ├── EnquiryForm.astro     # Contact form: validation, honeypot, success/error states
+│   └── ui/                   # Container, Section, SectionHead, Card, Grid, Eyebrow, Pill, ButtonLink, SocialIcon
+└── pages/
+    ├── index.astro           # Single-page portfolio: about/hero, skills, experience, projects, credentials, contact
+    ├── 404.astro
+    ├── robots.txt.ts         # Generated
+    ├── sitemap.xml.ts        # Generated from src/pages/*.astro
+    └── llms.txt.ts           # Generated from resume.ts
 
 public/
-├── profile.jpeg                     # Profile photo (served at /profile.jpeg)
-└── CV_Detailed_Pratik_Karanje.pdf   # Resume PDF (linked from hero Download button)
+├── profile.jpeg, favicon.svg
+├── CV_Pratik_Karanje.pdf, CV_Detailed_Pratik_Karanje.pdf
+└── icons/                    # github/linkedin/whatsapp.svg (masked via SocialIcon), tech/*.svg (skills marquee)
 ```
 
 ## Content Updates
 
-**All resume data lives in `src/data/resume.ts` only.** Never hardcode content in components. The file exports:
+**All résumé content lives in `src/data/resume.ts`.** Never hardcode content in components. Exports: `personal`, `skills`, `experience`, `projects`, `certifications`, `education`, `languages`, `stats`, `currentFocus`, `techStack` (`[name, logo]` pairs; logo is a file in `public/icons/tech/` without `.svg`), `enquiryTopics` (enquiry form dropdown). `personal.whatsapp` is a `wa.me` link used in the hero, contact section and footer.
 
-- `personal` — name, title, email, phone, github, linkedin, location, summary
-- `skills` — array of `{ category, items[] }`
-- `experience` — array of `{ role, company, period, highlights[] }`
-- `projects` — array of `{ name, org, tech[], description, link? }`
-- `certifications` — array of `{ name, issuer, status }`
-- `education` — array of `{ degree, institution, period }`
+Nav sections are `NAV` in `src/lib/site.ts`; each `id` must match a section `id` in `index.astro`.
 
 ## Design System
 
-**Theme:** Light. Background `#f0f4f8` (`bg-brand-50`) with `dot-grid` class (radial-gradient dots defined in `index.css`).
-
-**Section alternation:**
-- `dot-grid` sections: Hero, Skills, Certifications, Contact
-- `bg-white` sections: Experience, Projects
-
-**Cards:** `bg-white rounded-2xl border border-gray-100 shadow-sm` — standard card pattern used everywhere.
-
-**Typography:**
-- Section eyebrow: `text-sm font-semibold text-gray-400 uppercase tracking-widest`
-- Section heading: `text-4xl md:text-5xl font-bold text-gray-900`
-- Body: `text-sm text-gray-500 leading-relaxed`
-
-**Buttons:**
-- Primary (dark): `px-6 py-3 rounded-full bg-gray-900 text-white font-semibold hover:bg-gray-700`
-- Secondary (outline): `px-6 py-3 rounded-full border border-gray-200 text-gray-700 hover:border-gray-400`
-
-**Animations:** All use Framer Motion `whileInView` with `viewport={{ once: true }}`. Standard pattern:
-```tsx
-<motion.div
-  initial={{ y: 24, opacity: 0 }}
-  whileInView={{ y: 0, opacity: 1 }}
-  viewport={{ once: true }}
-  transition={{ duration: 0.55 }}
->
-```
-Use `ease: "easeOut"` (string) not an array — the installed framer-motion version rejects numeric arrays for `ease`.
+- **Tokens:** use semantic Tailwind colours from `globals.css` — `bg`, `surface`, `elevated`, `text`, `muted`, `faint`, `line`, `line-strong`, `accent`, `accent-ink`, `accent-soft`, `on-accent`. Never raw greys; they break dark mode.
+- **Theme:** `data-theme="light|dark"` on `<html>`; `dark:` variant is wired to it. Inline script in `Base.astro` sets it before paint.
+- **Typography classes:** `.t-hero`, `.t-h2`, `.t-h3`, `.t-lead`; accent phrase = `<span class="serif accent">…</span>`.
+- **Components:** `.wrap` (Container), `.card` (Card), `.btn btn-primary|btn-ghost` (ButtonLink), `.eyebrow` (Eyebrow), `.f-heading` / `.f-link` (footer).
+- **Section heading pattern:** `<SectionHead eyebrow="…" lead="…" wide>Plain words <span class="serif accent">accent words.</span></SectionHead>`
+- **Scroll reveal:** add `data-reveal` to an element; it fades up once on entering the viewport. Disabled under reduced motion and without JS.
+- **Motion:** respect `prefers-reduced-motion`; infinite animations must be stopped in the reduced-motion block at the end of `globals.css`.
 
 ## Path Alias
 
-`@/` maps to `src/` (configured in both `vite.config.ts` and `tsconfig.json`).
-
-```ts
-import { cn } from "@/lib/utils";       // ✓
-import { cn } from "../../lib/utils";   // also fine
-```
+`@/` maps to `src/` (`tsconfig.json` paths; Astro/Vite reads it automatically).
 
 ## Deployment
 
-Pushing to `main` triggers `.github/workflows/deploy.yml` which:
-1. Runs `npm ci && npm run build`
-2. Uploads `dist/` as a Pages artifact
-3. Deploys to `https://pkaranje.github.io`
-
-GitHub Pages source must be set to **GitHub Actions** (not branch) in repo Settings → Pages.
+Pushing to `main` triggers `.github/workflows/deploy.yml`: `npm ci` → lint → typecheck → build → upload `dist/` → deploy to `https://pkaranje.github.io`. GitHub Pages source must be **GitHub Actions**.
 
 ## Known Constraints
 
-- `lucide-react@1.x` does not export `Github` or `Linkedin` — use `GitBranch` and `Link2` instead.
-- `base: "./"` is set in `vite.config.ts` so asset paths work correctly on GitHub Pages.
-- The `SparklesCore` component (`src/components/ui/sparkles.tsx`) uses `initParticlesEngine` which only initialises once globally — do not instantiate it in components that mount/unmount frequently.
-- Profile photo fallback uses `ui-avatars.com` if `/profile.jpeg` fails to load (Hero component `onError` handler).
+- `trailingSlash: "always"` — internal links end in `/` (anchors use `/#section`).
+- Client `<script>` blocks are bundled; avoid importing `resume.ts` into them (pass values via `data-*` attributes instead).
+- Tailwind v4: no pointer cursor on buttons by default (restored in `globals.css` base layer).

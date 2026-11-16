@@ -1,0 +1,36 @@
+---
+/**
+ * Lenis smooth scrolling plus a back-to-top button. Lenis is skipped entirely for
+ * visitors who prefer reduced motion — native scrolling stays in place.
+ */
+import "lenis/dist/lenis.css";
+---
+
+<button
+  type="button"
+  data-to-top
+  aria-label="Back to top"
+  tabindex="-1"
+  class="pointer-events-none fixed bottom-6 right-6 z-50 grid h-11 w-11 translate-y-3 place-items-center rounded-full border border-line-strong bg-surface text-text opacity-0 shadow-lg transition-all duration-300 hover:border-accent-ink hover:text-accent-ink data-visible:pointer-events-auto data-visible:translate-y-0 data-visible:opacity-100"
+>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"></path>
+  </svg>
+</button>
+
+<script>
+  import Lenis from "lenis";
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const lenis = reduced ? null : new Lenis({ autoRaf: true, anchors: true });
+  const button = document.querySelector<HTMLButtonElement>("[data-to-top]")!;
+
+  const onScroll = () => {
+    const visible = window.scrollY > 600;
+    button.toggleAttribute("data-visible", visible);
+    button.tabIndex = visible ? 0 : -1;
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  button.addEventListener("click", () => (lenis ? lenis.scrollTo(0) : window.scrollTo({ top: 0 })));
+</script>

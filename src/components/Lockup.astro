@@ -1,0 +1,23 @@
+---
+import { personal } from "@/data/resume";
+
+/** "PK" monogram tile + name, with the title underneath from `sm` up. */
+type Props = { size?: number; class?: string };
+const { size = 40, class: className = "" } = Astro.props;
+---
+
+<span class={`inline-flex items-center gap-3 ${className}`}>
+  <span
+    aria-hidden="true"
+    class="brand-gradient grid shrink-0 place-items-center rounded-[12px] font-[family-name:var(--font-display)] font-extrabold tracking-[-0.04em] text-white"
+    style={`width:${size}px;height:${size}px;font-size:${Math.round(size * 0.42)}px`}
+  >
+    PK
+  </span>
+  <span class="flex flex-col leading-tight">
+    <span class="font-[family-name:var(--font-display)] text-[1.05rem] font-extrabold tracking-[-0.02em] text-text">
+      {personal.name}
+    </span>
+    <span class="hidden text-[0.75rem] text-muted sm:block">{personal.subtitle}</span>
+  </span>
+</span>

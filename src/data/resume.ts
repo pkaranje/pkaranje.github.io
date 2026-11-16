@@ -6,6 +6,8 @@ export const personal = {
   phone: "+91 902 873 5097",
   github: "https://github.com/pkaranje",
   linkedin: "https://linkedin.com/in/pratikkaranje",
+  /** wa.me link: country code + number, no "+" or spaces. */
+  whatsapp: "https://wa.me/919028735097",
   location: "Pune, India",
   summary:
     "Engineering Lead and Solution Architect with 12+ years of experience building backend platforms, SaaS products, and cloud-native applications using Python and AWS technologies. Experience spans healthcare, IoT, product engineering, and open-source environments. Specializes in backend systems, platform development, cloud solutions, and engineering delivery.",
@@ -187,4 +189,53 @@ export const education = [
     institution: "Sou. Venutai Chavan Polytechnic, Pune",
     period: "2006 – 2009",
   },
+];
+
+export const languages = [
+  { name: "English", level: "Professional" },
+  { name: "Hindi", level: "Professional" },
+  { name: "Marathi", level: "Native" },
+];
+
+/** Headline numbers shown under the hero. */
+export const stats = [
+  { value: "12+", label: "Years experience" },
+  { value: "500+", label: "OSS plugin stars" },
+  { value: "6+", label: "Major projects" },
+  { value: "2+", label: "Global orgs" },
+];
+
+export const currentFocus =
+  "Generative AI, Agentic AI, cloud-native backend platforms, and AI-assisted engineering workflows.";
+
+/**
+ * Logo row on the Skills section: [name, file in public/icons/tech/ without ".svg"].
+ * Only tools with a recognisable mark; the full list lives in `skills`.
+ */
+export const techStack: [name: string, logo: string][] = [
+  ["Python", "python"],
+  ["AWS", "aws"],
+  ["Django", "django"],
+  ["Go", "go"],
+  ["Node.js", "nodejs"],
+  ["TypeScript", "typescript"],
+  ["PostgreSQL", "postgresql"],
+  ["MySQL", "mysql"],
+  ["GraphQL", "graphql"],
+  ["REST APIs", "rest"],
+  ["GitHub Actions", "githubactions"],
+  ["Angular", "angular"],
+  ["React", "react"],
+  ["Claude Code", "claude"],
+  ["ChatGPT", "openai"],
+];
+
+/** Options for the "What's this about?" field on the enquiry form. */
+export const enquiryTopics = [
+  "Full-time opportunity",
+  "Consulting / freelance project",
+  "Architecture or code review",
+  "Open-source collaboration",
+  "Mentoring or speaking",
+  "Something else",
 ];

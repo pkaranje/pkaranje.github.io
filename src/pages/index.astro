@@ -1,0 +1,367 @@
+---
+import Base from "@/layouts/Base.astro";
+import Container from "@/components/ui/Container.astro";
+import Section from "@/components/ui/Section.astro";
+import SectionHead from "@/components/ui/SectionHead.astro";
+import ButtonLink from "@/components/ui/ButtonLink.astro";
+import Card from "@/components/ui/Card.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Eyebrow from "@/components/ui/Eyebrow.astro";
+import Pill from "@/components/ui/Pill.astro";
+import SocialIcon from "@/components/ui/SocialIcon.astro";
+import EnquiryForm from "@/components/EnquiryForm.astro";
+import { SITE, bareUrl } from "@/lib/site";
+import {
+  personal,
+  skills,
+  experience,
+  projects,
+  certifications,
+  education,
+  languages,
+  stats,
+  currentFocus,
+  techStack,
+} from "@/data/resume";
+
+const meta = {
+  path: "/",
+  title: "Engineering Leader & Solutions Architect",
+  description:
+    "Pratik Karanje is an engineering lead and solutions architect with 12+ years building Python backend platforms, AWS serverless applications and cloud-native SaaS products.",
+  brandFirst: true,
+};
+
+const [firstName, ...rest] = personal.name.split(" ");
+const lastName = rest.join(" ");
+const pad = (n: number) => String(n + 1).padStart(2, "0");
+
+const CONTACTS = [
+  { label: "Email", value: personal.email, href: `mailto:${personal.email}` },
+  { label: "Phone", value: personal.phone, href: `tel:${personal.phone.replace(/\s/g, "")}` },
+  { label: "WhatsApp", value: "Message on WhatsApp", href: personal.whatsapp, icon: "whatsapp" as const },
+  { label: "GitHub", value: bareUrl(personal.github), href: personal.github, icon: "github" as const },
+  { label: "LinkedIn", value: bareUrl(personal.linkedin), href: personal.linkedin, icon: "linkedin" as const },
+  { label: "Location", value: personal.location },
+];
+---
+
+<Base meta={meta}>
+  <!-- hero -->
+  <section id="about" class="relative z-[2] pt-[clamp(118px,11vw,152px)] pb-[clamp(40px,5vw,64px)]">
+    <Container>
+      <div class="grid items-center gap-[clamp(40px,6vw,80px)] lg:grid-cols-[1fr_minmax(300px,400px)]">
+        <div>
+          <Eyebrow>{personal.subtitle}</Eyebrow>
+          <h1 class="t-hero mt-[26px]">
+            {firstName}
+            <br />
+            <span class="serif accent">{lastName}.</span>
+          </h1>
+          <p class="mt-5 text-[clamp(1.1rem,1.6vw,1.35rem)] font-semibold tracking-[-0.01em]">{personal.title}</p>
+          <p class="t-lead mt-4">{personal.summary}</p>
+          <div class="mt-9 flex flex-wrap gap-3.5">
+            <ButtonLink href="/#contact">Start a conversation</ButtonLink>
+            <ButtonLink href={SITE.resume} variant="ghost" download>Download résumé</ButtonLink>
+          </div>
+          <ul class="mt-6 flex flex-wrap gap-2.5">
+            <li class="rounded-full bg-accent-soft px-4 py-1.5 text-[0.88rem] font-medium text-accent-ink">{personal.location}</li>
+            {
+              [
+                { href: personal.linkedin, label: "LinkedIn", icon: "linkedin" as const },
+                { href: personal.github, label: "GitHub", icon: "github" as const },
+                { href: personal.whatsapp, label: "WhatsApp", icon: "whatsapp" as const },
+              ].map((l) => (
+                <li>
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 rounded-full border border-line-strong px-4 py-1.5 text-[0.88rem] text-muted transition-colors hover:border-accent-ink hover:text-accent-ink"
+                  >
+                    <SocialIcon name={l.icon} size={15} />
+                    {l.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- portrait + current focus -->
+        <div class="relative mx-auto w-full max-w-[400px]">
+          <div aria-hidden="true" class="portrait-glow"></div>
+          <div class="relative overflow-hidden rounded-[28px] border border-line bg-surface">
+            <img
+              src="/profile.jpeg"
+              alt={`Portrait of ${personal.name}`}
+              width="1200"
+              height="1600"
+              fetchpriority="high"
+              class="aspect-[4/5] w-full object-cover object-top"
+            />
+          </div>
+          <div class="relative -mt-16 mx-4 rounded-[var(--radius-brand)] border border-line bg-[var(--glass)] p-5 backdrop-blur-[14px]">
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-accent-ink">Current focus</span>
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-0.5 text-[0.75rem] font-medium text-accent-ink">
+                <span aria-hidden="true" class="live-dot h-1.5 w-1.5 rounded-full bg-accent"></span>
+                Active
+              </span>
+            </div>
+            <p class="mt-2 text-[0.92rem] text-muted">{currentFocus}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- stats -->
+      <dl class="mt-[clamp(48px,6vw,72px)] grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-brand)] border border-line bg-line sm:grid-cols-4">
+        {
+          stats.map((s) => (
+            <div class="flex flex-col-reverse bg-surface px-6 py-5">
+              <dt class="mt-1 text-[0.85rem] text-muted">{s.label}</dt>
+              <dd class="font-[family-name:var(--font-display)] text-[2.25rem] font-extrabold leading-none tracking-[-0.04em] text-accent-ink">{s.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Container>
+  </section>
+
+  <!-- skills -->
+  <Section id="skills">
+    <Container>
+      <SectionHead
+        eyebrow="Skills"
+        lead="Backend platforms and cloud architecture first, with the data, delivery and frontend work around them."
+        wide
+      >
+        The tools behind <span class="serif accent">a decade of delivery.</span>
+      </SectionHead>
+
+      <!-- Two identical copies; the track slides by one copy (-50%) and loops. The second copy is
+           hidden from screen readers. -->
+      <div class="marquee mt-[clamp(40px,6vw,64px)]" data-reveal>
+        <div class="marquee-track" style={`--marquee-duration:${techStack.length * 3}s`}>
+          {
+            [0, 1].map((copy) => (
+              <ul class="marquee-copy" aria-hidden={copy === 1 ? "true" : undefined}>
+                {techStack.map(([name, logo]) => (
+                  <li class="stack-chip">
+                    <img src={`/icons/tech/${logo}.svg`} alt="" width="28" height="28" loading="lazy" />
+                    {name}
+                  </li>
+                ))}
+              </ul>
+            ))
+          }
+        </div>
+      </div>
+
+      <Grid cols={4} class="mt-10">
+        {
+          skills.map((group, i) => (
+            <Card class="gap-4" data-reveal>
+              <div class="flex items-baseline justify-between gap-3">
+                <h3 class="text-[1.05rem] font-semibold">{group.category}</h3>
+                <span class="text-[0.8rem] text-accent-ink">{pad(i)}</span>
+              </div>
+              <ul class="flex flex-wrap gap-1.5">
+                {group.items.map((item) => <li><Pill>{item}</Pill></li>)}
+              </ul>
+            </Card>
+          ))
+        }
+      </Grid>
+    </Container>
+  </Section>
+
+  <!-- experience -->
+  <Section id="experience">
+    <Container>
+      <SectionHead eyebrow="Experience" lead="From product teams in Pune to platform engineering for the open-source world." wide>
+        Twelve years of <span class="serif accent">building backends.</span>
+      </SectionHead>
+      <ol class="mt-[clamp(40px,6vw,72px)] grid gap-5">
+        {
+          experience.map((job) => (
+            <li
+              data-reveal
+              class="grid gap-6 rounded-[var(--radius-brand)] border border-line bg-[linear-gradient(180deg,var(--bg-card),transparent)] p-[clamp(26px,3vw,40px)] md:grid-cols-[minmax(220px,1fr)_2fr]"
+            >
+              <div>
+                <p class="text-[0.85rem] font-medium text-accent-ink">{job.period}</p>
+                <h3 class="t-h3 mt-2">{job.role}</h3>
+                <p class="mt-1 text-[0.95rem] text-muted">{job.company}</p>
+              </div>
+              <ul class="grid gap-3">
+                {job.highlights.map((h) => (
+                  <li class="flex gap-3 text-[0.95rem] text-muted">
+                    <span aria-hidden="true" class="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                    <span>{h}</span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ol>
+    </Container>
+  </Section>
+
+  <!-- projects -->
+  <Section id="projects">
+    <Container>
+      <SectionHead eyebrow="Projects" lead="Platforms, data pipelines and open-source work, mostly Python, Go and AWS." wide>
+        Selected work, <span class="serif accent">shipped to production.</span>
+      </SectionHead>
+      <Grid class="mt-[clamp(40px,6vw,72px)]">
+        {
+          projects.map((p, i) => (
+            <Card class="gap-0" data-reveal>
+              <div class="flex items-center justify-between gap-3">
+                <span class="text-[0.8rem] font-medium text-accent-ink">{p.org}</span>
+                <span class="text-[0.8rem] text-faint">{pad(i)}</span>
+              </div>
+              <h3 class="mt-3 text-[1.15rem] font-semibold leading-snug">{p.name}</h3>
+              <p class="mt-3 text-[0.93rem] text-muted">{p.description}</p>
+              <ul class="mt-auto flex flex-wrap gap-1.5 pt-5">
+                {p.tech.map((t) => <li><Pill>{t}</Pill></li>)}
+              </ul>
+              {p.link && (
+                <a href={p.link} target="_blank" rel="noopener noreferrer" class="mt-4 text-[0.9rem] text-accent-ink hover:underline">
+                  View on GitHub &rarr;
+                </a>
+              )}
+            </Card>
+          ))
+        }
+      </Grid>
+    </Container>
+  </Section>
+
+  <!-- credentials -->
+  <Section id="credentials">
+    <Container>
+      <SectionHead eyebrow="Credentials" lead="Certifications, education and languages." wide>
+        Always <span class="serif accent">learning.</span>
+      </SectionHead>
+      <Grid cols={4} class="mt-[clamp(40px,6vw,72px)]">
+        {
+          certifications.map((c) => {
+            const done = c.status === "Completed";
+            return (
+              <Card class="gap-2" data-reveal>
+                <span
+                  class={`self-start rounded-full px-2.5 py-0.5 text-[0.75rem] font-medium ${done ? "bg-accent-soft text-accent-ink" : "border border-line-strong text-muted"}`}
+                >
+                  {c.status}
+                </span>
+                <h3 class="mt-2 text-[1.1rem] font-semibold">{c.name}</h3>
+                <p class="text-[0.9rem] text-muted">{c.issuer}</p>
+              </Card>
+            );
+          })
+        }
+      </Grid>
+
+      <div class="mt-5 grid gap-5 lg:grid-cols-[2fr_1fr]">
+        <div data-reveal class="rounded-[var(--radius-brand)] border border-line bg-surface px-7 py-[26px]">
+          <h3 class="f-heading">Education</h3>
+          <ul class="grid gap-5">
+            {
+              education.map((e) => (
+                <li class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                  <div>
+                    <p class="font-semibold">{e.degree}</p>
+                    <p class="text-[0.9rem] text-muted">{e.institution}</p>
+                  </div>
+                  <span class="text-[0.85rem] text-faint">{e.period}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div data-reveal class="rounded-[var(--radius-brand)] border border-line bg-surface px-7 py-[26px]">
+          <h3 class="f-heading">Languages</h3>
+          <ul class="grid gap-3">
+            {
+              languages.map((l) => (
+                <li class="flex items-center justify-between gap-4">
+                  <span class="font-medium">{l.name}</span>
+                  <span class="text-[0.85rem] text-muted">{l.level}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <!-- contact -->
+  <section id="contact" class="relative z-[2] py-[clamp(56px,7vw,88px)]">
+    <Container>
+      <div
+        data-reveal
+        class="overflow-hidden rounded-[28px] border border-line bg-[linear-gradient(180deg,var(--bg-card),transparent)] px-[clamp(22px,4vw,56px)] py-[clamp(40px,6vw,76px)]"
+      >
+        <div class="text-center">
+          <div class="flex justify-center"><Eyebrow>Let's talk</Eyebrow></div>
+          <h2 class="t-h2 mx-auto mt-[22px] max-w-[20ch]">
+            Let's build something <span class="serif accent">that lasts.</span>
+          </h2>
+          <p class="t-lead mx-auto mt-5">
+            Open to new opportunities, collaborations, and conversations about engineering and technology.
+          </p>
+          <div class="mt-9 flex flex-wrap justify-center gap-3.5">
+            <ButtonLink href={personal.whatsapp}>Chat on WhatsApp</ButtonLink>
+            <ButtonLink href={SITE.resumeDetailed} variant="ghost" download>Detailed CV</ButtonLink>
+          </div>
+        </div>
+
+        <div class="mt-[clamp(40px,5vw,64px)] grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+          <div class="rounded-[var(--radius-brand)] border border-line bg-surface p-[clamp(22px,3vw,36px)]">
+            <h3 class="t-h3">Send an enquiry</h3>
+            <p class="mt-1.5 mb-6 text-[0.93rem] text-muted">Roles, projects or a quick question. It comes straight to my inbox.</p>
+            <EnquiryForm />
+          </div>
+
+          <ul class="grid content-start gap-3">
+            {
+              CONTACTS.map((c) => {
+                const inner = (
+                  <>
+                    <span class="flex items-center gap-2 text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-accent-ink">
+                      {c.icon && <SocialIcon name={c.icon} size={13} />}
+                      {c.label}
+                    </span>
+                    <span class="mt-1 block truncate text-[0.92rem] text-text">{c.value}</span>
+                  </>
+                );
+                const box = "block rounded-[14px] border border-line bg-surface px-5 py-4";
+                const external = c.href?.startsWith("http");
+                return (
+                  <li class="min-w-0">
+                    {c.href ? (
+                      <a
+                        href={c.href}
+                        target={external ? "_blank" : undefined}
+                        rel={external ? "noopener noreferrer" : undefined}
+                        class={`${box} transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-accent-ink`}
+                      >
+                        {inner}
+                      </a>
+                    ) : (
+                      <div class={box}>{inner}</div>
+                    )}
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </div>
+      </div>
+    </Container>
+  </section>
+</Base>

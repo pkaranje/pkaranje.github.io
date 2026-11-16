@@ -1,0 +1,68 @@
+---
+import Container from "./ui/Container.astro";
+import SocialIcon from "./ui/SocialIcon.astro";
+import Lockup from "./Lockup.astro";
+import { NAV, SITE, bareUrl } from "@/lib/site";
+import { personal } from "@/data/resume";
+
+const SOCIAL = [
+  { href: personal.github, icon: "github" as const, label: "GitHub" },
+  { href: personal.linkedin, icon: "linkedin" as const, label: "LinkedIn" },
+  { href: personal.whatsapp, icon: "whatsapp" as const, label: "WhatsApp" },
+];
+---
+
+<footer class="relative z-[2] mt-[clamp(56px,7vw,88px)] border-t border-line bg-elevated pt-[clamp(56px,7vw,88px)]">
+  <Container>
+    <div class="grid grid-cols-1 gap-[clamp(28px,3.5vw,48px)] pb-[clamp(48px,6vw,72px)] sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto_auto] lg:gap-x-[clamp(40px,5vw,80px)]">
+      <div>
+        <a href="/" aria-label="Home"><Lockup size={46} /></a>
+        <p class="mt-[18px] max-w-[22rem] text-[0.9rem] font-semibold text-text">{personal.title}</p>
+        <p class="mt-2 max-w-[22rem] text-[0.9rem] text-muted">{personal.subtitle}</p>
+        <address class="mt-[18px] flex items-center gap-2 text-[0.9rem] not-italic text-text">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="shrink-0 text-accent-ink">
+            <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"></path>
+          </svg>
+          {personal.location}
+        </address>
+      </div>
+
+      <nav aria-label="Sections">
+        <h2 class="f-heading">Explore</h2>
+        <ul class="grid gap-[11px]">
+          {NAV.map((item) => <li><a href={`/#${item.id}`} class="f-link">{item.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav aria-label="Résumé">
+        <h2 class="f-heading">Résumé</h2>
+        <ul class="grid gap-[11px]">
+          <li><a href={SITE.resume} class="f-link" download>One-page CV (PDF)</a></li>
+          <li><a href={SITE.resumeDetailed} class="f-link" download>Detailed CV (PDF)</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Connect">
+        <h2 class="f-heading">Connect</h2>
+        <ul class="grid gap-[11px]">
+          <li><a href={`mailto:${personal.email}`} class="f-link">{personal.email}</a></li>
+          <li><a href={`tel:${personal.phone.replace(/\s/g, "")}`} class="f-link">{personal.phone}</a></li>
+          <li class="flex gap-4 pt-1">
+            {
+              SOCIAL.map((s) => (
+                <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={`${personal.name} on ${s.label}`} title={bareUrl(s.href)} class="f-link">
+                  <SocialIcon name={s.icon} />
+                </a>
+              ))
+            }
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-2.5 border-t border-line py-[26px] text-[0.84rem] text-faint">
+      <span>&copy; {new Date().getFullYear()} {personal.name}. All rights reserved.</span>
+      <span>Built with Astro.</span>
+    </div>
+  </Container>
+</footer>

@@ -1,0 +1,13 @@
+---
+import Eyebrow from "./Eyebrow.astro";
+
+// Title goes in the default slot (it often carries a serif accent span).
+type Props = { eyebrow?: string; lead?: string; wide?: boolean; class?: string };
+const { eyebrow, lead, wide = false, class: className = "" } = Astro.props;
+---
+
+<div class={`max-w-[46rem] ${className}`}>
+  {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+  <h2 class={`t-h2 mt-[22px] ${wide ? "t-h2-wide" : ""}`}><slot /></h2>
+  {lead && <p class="t-lead mt-5">{lead}</p>}
+</div>

@@ -1,0 +1,282 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ===========================================================
+   Brand palette (adapted from the Giilab design system)
+   =========================================================== */
+:root {
+  --brand-blue: #2563eb;
+  --brand-purple: #7c3aed;
+  --brand-cyan: #06b6d4;
+  --brand-ink: #0b1220;
+  --brand-paper: #f3f4f6;
+}
+
+/* ===========================================================
+   Semantic tokens. Light is the default; the toggle sets
+   data-theme="dark" on <html>.
+   =========================================================== */
+:root {
+  color-scheme: light;
+  --bg: #f3f4f6;
+  --bg-card: #ffffff;
+  --bg-elev: #e8eaee;
+  --text: #0b1220;
+  /* The board lists #64748B for secondary text; it is 4.1:1 on this ground
+     and fails WCAG AA for body copy, so it is darkened here. */
+  --muted: #475569;
+  --faint: #566273;
+  --line: rgb(11 18 32 / 0.1);
+  --line-strong: rgb(11 18 32 / 0.2);
+  --glass: rgb(243 244 246 / 0.8);
+  --ghost-stroke: rgb(11 18 32 / 0.55);   /* 0.3 measured 1.97:1 — large text needs 3:1 */
+  --accent: #2563eb;
+  --accent-2: #7c3aed;
+  --accent-text: #1d4ed8;
+  --accent-soft: rgb(37 99 235 / 0.1);
+  --on-accent: #ffffff;
+  --grain-opacity: 0.028;
+}
+
+:root[data-theme="dark"] {
+  /* Native scrollbars, form controls and autofill follow the theme. */
+  color-scheme: dark;
+  --bg: #0b1220;
+  --bg-card: #141b2d;
+  --bg-elev: #0e1525;
+  --text: #f3f4f6;
+  --muted: #94a3b8;
+  --faint: #8a98ac;
+  --line: rgb(243 244 246 / 0.1);
+  --line-strong: rgb(243 244 246 / 0.22);
+  --glass: rgb(11 18 32 / 0.75);
+  --ghost-stroke: rgb(243 244 246 / 0.62);
+  --accent: #3b82f6;
+  --accent-2: #a78bfa;
+  --accent-text: #60a5fa;
+  --accent-soft: rgb(59 130 246 / 0.14);
+  /* The dark theme lightens the accent, so white on it is only 3.67:1.
+     Dark ink on the lighter blue is 5.1:1 and matches the reference design. */
+  --on-accent: #0b1220;
+  --grain-opacity: 0.05;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--bg-card);
+  --color-elevated: var(--bg-elev);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-ink: var(--accent-text);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-paper: var(--brand-paper);
+
+  --font-sans: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Urbanist", "Space Grotesk", sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+
+  --radius-brand: 18px;
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  /* Tailwind v4 dropped the pointer cursor on buttons; links already have it. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+  html {
+    /* Smooth scrolling comes from Lenis (BackToTop.astro); CSS smooth
+       scroll-behavior fights it. */
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position: relative;
+  }
+  /* soft colour field behind everything */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(38% 34% at 82% 6%, rgb(124 58 237 / 0.16), transparent 70%),
+      radial-gradient(30% 30% at 8% 32%, rgb(37 99 235 / 0.12), transparent 70%),
+      radial-gradient(26% 26% at 70% 88%, rgb(6 182 212 / 0.08), transparent 70%);
+  }
+  /* film grain */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Scrolling logo rows (Skills). Each copy carries its own trailing gap so -50% lands
+     exactly on the start of the second copy. Edges fade out; hover pauses. Chips use classes,
+     not utilities, because ~150 repeated utility lists bloat the page HTML. The white tile
+     keeps dark logos (Next.js, GitHub) visible in dark mode. */
+  .marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee var(--marquee-duration, 40s) linear infinite;
+  }
+  .marquee-reverse { animation-direction: reverse; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .marquee-copy { display: flex; gap: 0.6rem; padding-right: 0.6rem; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  .stack-chip {
+    display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.875rem 0.25rem 0.25rem; font-size: 0.85rem;
+    border: 1px solid var(--line); border-radius: 999px; background: var(--bg-card);
+  }
+  .stack-chip img {
+    width: 1.75rem; height: 1.75rem; padding: 0.3125rem; object-fit: contain;
+    border-radius: 999px; background: #fff;
+  }
+
+  /* Display headings: Urbanist, tight and heavy. */
+  .t-hero {
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 8.2vw, 7rem);
+    font-weight: 800;
+    /* Below ~1.08 the serif accent's descenders (p, y, g) hit the next line. */
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .t-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.4vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    max-width: 18ch;
+    text-wrap: balance;
+  }
+  .t-h2-wide { max-width: 26ch; }
+  .t-h3 {
+    font-size: clamp(1.15rem, 1.6vw, 1.35rem);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+  .t-lead {
+    font-size: clamp(1.06rem, 1.4vw, 1.25rem);
+    color: var(--muted);
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+
+  /* Named once here rather than repeated as utility strings on every link of every
+     page: same styles, less HTML (the audit flags the site-wide text-to-HTML ratio). */
+  .f-heading { @apply mb-4 text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-accent-ink; }
+  .f-link { @apply text-[0.9rem] text-muted transition-colors hover:text-accent-ink; }
+  .roll-link { @apply block h-[1.5em] overflow-hidden text-[0.92rem] leading-[1.5em]; }
+  .roll-track { @apply flex flex-col transition-transform duration-[400ms] ease-[var(--ease-brand)] group-hover:-translate-y-[1.5em]; }
+  /* Shared UI components (Container, Card, ButtonLink, Eyebrow, big step numbers). Utilities
+     passed by a caller still win: they sit in the later utilities layer. */
+  .wrap { @apply relative z-[2] mx-auto w-full max-w-[1240px] px-[clamp(20px,4vw,48px)]; }
+  .card { @apply flex flex-col gap-3 rounded-[var(--radius-brand)] border border-line bg-surface px-7 py-[26px] transition-[transform,border-color] duration-500 ease-[var(--ease-brand)] hover:-translate-y-1.5 hover:border-line-strong; }
+  .btn { @apply inline-flex items-center gap-2.5 rounded-full px-[30px] py-[15px] text-[0.95rem] font-semibold tracking-[0.01em] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease-brand)] hover:-translate-y-0.5; }
+  .btn-primary { @apply bg-accent text-on-accent hover:scale-[1.02]; }
+  .btn-ghost { @apply border border-line-strong text-text hover:border-accent-ink hover:text-accent-ink; }
+  .btn-invert { @apply bg-white text-[#1d4ed8] hover:scale-[1.02]; }
+  .btn-arrow { @apply transition-transform duration-[350ms] ease-[var(--ease-brand)] group-hover:translate-x-1; }
+  .eyebrow { @apply inline-flex items-center gap-2.5 text-[0.78rem] font-medium tracking-[0.01em] text-muted; }
+  .eyebrow-dot { @apply h-2 w-2 shrink-0 rounded-full bg-accent; }
+  .big-number { @apply block font-[family-name:var(--font-display)] text-[3rem] font-extrabold leading-none tracking-[-0.05em] text-accent-ink; }
+}
+
+@layer utilities {
+  /* The accent phrase device: Instrument Serif italic in the brand blue. */
+  .serif {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    font-size: 1.04em;
+  }
+  .accent { color: var(--accent-text); }
+  /* Outlined display text. */
+  .ghost {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ghost-stroke);
+  }
+  .brand-gradient {
+    background-image: linear-gradient(120deg, var(--accent), var(--accent-2));
+  }
+
+  /* Soft glow behind the hero portrait, floating gently. */
+  .portrait-glow {
+    position: absolute;
+    inset: -8%;
+    border-radius: 9999px;
+    background: radial-gradient(closest-side, var(--accent-soft), color-mix(in srgb, var(--accent-2) 14%, transparent) 55%, transparent);
+    filter: blur(30px);
+    animation: portrait-glow 6s ease-in-out infinite;
+  }
+  .live-dot { animation: live-dot 2s ease-in-out infinite; }
+  @keyframes portrait-glow { 0%, 100% { opacity: 0.7; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1.04); } }
+  @keyframes live-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  /* Scroll reveal: elements with [data-reveal] fade up once when they enter the viewport
+     (script in Base.astro). Without JS, or with reduced motion, they are simply visible. */
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s var(--ease-brand), transform 0.6s var(--ease-brand);
+  }
+  .js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+  /* The global reduced-motion rule shortens durations, which would make infinite loops
+     jitter; stop them outright instead. Kept last so it wins at equal specificity. */
+  @media (prefers-reduced-motion: reduce) {
+    .portrait-glow, .live-dot { animation: none; }
+    .js [data-reveal] { opacity: 1; transform: none; }
+    .marquee { mask-image: none; }
+    .marquee-track { animation: none; width: auto; }
+    .marquee-copy { flex-wrap: wrap; padding-right: 0; }
+    .marquee-copy[aria-hidden], .marquee-copy > [aria-hidden] { display: none; }
+  }
+}

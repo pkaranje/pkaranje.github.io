@@ -1,0 +1,161 @@
+---
+import { personal, enquiryTopics } from "@/data/resume";
+import { ENDPOINT, ACCESS_KEY } from "@/lib/enquiry";
+
+/**
+ * Enquiry form, delivered through Web3Forms (src/lib/enquiry.ts). The script below
+ * validates and sends with fetch; without JS the form still posts natively.
+ */
+const FIELD =
+  "w-full rounded-xl border border-line bg-bg px-4 py-3 text-[0.95rem] text-text placeholder:text-faint focus:border-accent focus:outline-none";
+const LABEL = "mb-1.5 block text-[0.88rem] font-medium";
+const ERROR = "mt-1.5 text-[0.82rem] text-accent-ink";
+---
+
+<div data-enquiry>
+  <div role="status" hidden data-success class="rounded-[var(--radius-brand)] border border-line bg-surface p-8">
+    <h3 class="text-[1.2rem] font-semibold" data-success-title>Thanks, your message is on its way.</h3>
+    <p class="mt-2.5 text-[0.95rem] text-muted" data-success-body>I read every message and usually reply within two working days.</p>
+    <button type="button" data-again class="mt-5 text-[0.9rem] font-medium text-accent-ink underline-offset-4 hover:underline">
+      Send another message
+    </button>
+  </div>
+
+  <form action={ENDPOINT} method="post" novalidate class="grid gap-5">
+    <input type="hidden" name="access_key" value={ACCESS_KEY} />
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for="name" class={LABEL}>Your name <span class="text-accent-ink">*</span></label>
+        <input id="name" name="name" type="text" autocomplete="name" required class={FIELD} placeholder="Your name" />
+        <p id="name-error" hidden class={ERROR}></p>
+      </div>
+      <div>
+        <label for="email" class={LABEL}>Email <span class="text-accent-ink">*</span></label>
+        <input id="email" name="email" type="email" autocomplete="email" required class={FIELD} placeholder="you@company.com" />
+        <p id="email-error" hidden class={ERROR}></p>
+      </div>
+      <div>
+        <label for="phone" class={LABEL}>Phone / WhatsApp <span class="text-faint">(optional)</span></label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" class={FIELD} placeholder="+91 98765 43210" />
+        <p id="phone-error" hidden class={ERROR}></p>
+      </div>
+      <div>
+        <label for="topic" class={LABEL}>What&rsquo;s this about? <span class="text-faint">(optional)</span></label>
+        <select id="topic" name="topic" class={FIELD}>
+          <option value="" selected>Choose a topic</option>
+          {enquiryTopics.map((t) => <option value={t}>{t}</option>)}
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label for="message" class={LABEL}>Message <span class="text-accent-ink">*</span></label>
+      <textarea id="message" name="message" rows="5" required class={FIELD} placeholder="A few lines about the role, project or idea."></textarea>
+      <p id="message-error" hidden class={ERROR}></p>
+    </div>
+
+    <!-- honeypot: hidden from people, tempting to bots. Web3Forms also rejects it server-side. -->
+    <div aria-hidden="true" class="absolute left-[-9999px] h-px w-px overflow-hidden">
+      <label for="botcheck">Leave this unchecked</label>
+      <input id="botcheck" name="botcheck" type="checkbox" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <p role="alert" hidden data-server-error class="rounded-xl border border-line-strong bg-accent-soft px-4 py-3 text-[0.9rem]">
+      That didn&rsquo;t go through. Please try again, or email me at{" "}
+      <a href={`mailto:${personal.email}`} class="font-medium text-accent-ink underline underline-offset-4">{personal.email}</a>
+    </p>
+
+    <div class="flex flex-wrap items-center gap-4">
+      <button
+        type="submit"
+        class="group brand-gradient inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-[0.95rem] font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+      >
+        <span aria-hidden="true" class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white group-disabled:inline-block"></span>
+        <span class="group-disabled:hidden">Send message <span aria-hidden="true">&rarr;</span></span>
+        <span class="hidden group-disabled:inline">Sending…</span>
+      </button>
+      <span aria-live="polite" class="sr-only" data-live></span>
+    </div>
+  </form>
+</div>
+
+<script>
+  import { send, type Enquiry } from "@/lib/enquiry";
+
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  // Loose on purpose: formats vary too much worldwide for anything stricter.
+  const PHONE_RE = /^\+?[\d\s()-]{7,20}$/;
+  const FIELDS = ["name", "email", "phone", "message"] as const;
+  type Field = (typeof FIELDS)[number];
+
+  function validate(d: Enquiry): Partial<Record<Field, string>> {
+    const e: Partial<Record<Field, string>> = {};
+    if (!d.name) e.name = "Please tell me your name.";
+    if (!d.email) e.email = "I need an email address to reply to.";
+    else if (!EMAIL_RE.test(d.email)) e.email = "That doesn't look like a valid email address.";
+    if (d.phone && !PHONE_RE.test(d.phone)) e.phone = "Please use digits and a country code, like +91 98765 43210.";
+    if (!d.message) e.message = "Please add a short message.";
+    else if (d.message.length < 20) e.message = "A little more detail helps: 20 characters or more.";
+    return e;
+  }
+
+  const root = document.querySelector<HTMLElement>("[data-enquiry]")!;
+  const form = root.querySelector("form")!;
+  const success = root.querySelector<HTMLElement>("[data-success]")!;
+  const serverError = root.querySelector<HTMLElement>("[data-server-error]")!;
+  const submit = form.querySelector<HTMLButtonElement>("[type=submit]")!;
+  const live = form.querySelector<HTMLElement>("[data-live]")!;
+
+  function showErrors(errors: Partial<Record<Field, string>>) {
+    for (const f of FIELDS) {
+      const input = form.querySelector<HTMLElement>(`#${f}`)!;
+      const msg = form.querySelector<HTMLElement>(`#${f}-error`)!;
+      const text = errors[f];
+      msg.textContent = text ?? "";
+      msg.hidden = !text;
+      if (text) {
+        input.setAttribute("aria-invalid", "true");
+        input.setAttribute("aria-describedby", `${f}-error`);
+      } else {
+        input.removeAttribute("aria-invalid");
+        input.removeAttribute("aria-describedby");
+      }
+    }
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const fd = new FormData(form);
+    if (fd.get("botcheck")) return; // honeypot
+
+    const get = (k: string) => String(fd.get(k) ?? "").trim();
+    const data: Enquiry = { name: get("name"), email: get("email"), phone: get("phone"), topic: get("topic"), message: get("message") };
+    const errors = validate(data);
+    showErrors(errors);
+    const first = Object.keys(errors)[0];
+    if (first) {
+      form.querySelector<HTMLElement>(`#${first}`)?.focus();
+      return;
+    }
+
+    submit.disabled = true;
+    serverError.hidden = true;
+    live.textContent = "Sending your message";
+    try {
+      await send(data);
+      form.reset();
+      form.hidden = true;
+      success.hidden = false;
+    } catch {
+      serverError.hidden = false;
+    } finally {
+      submit.disabled = false;
+      live.textContent = "";
+    }
+  });
+
+  root.querySelector("[data-again]")!.addEventListener("click", () => {
+    success.hidden = true;
+    form.hidden = false;
+  });
+</script>
