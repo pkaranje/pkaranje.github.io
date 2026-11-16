@@ -19,7 +19,7 @@ Personal portfolio website for Pratik Karanje. Static Astro site deployed to Git
 The dependency list is intentionally minimal: 6 runtime (`astro`, `@tailwindcss/vite`, `lenis`, 3× `@fontsource/*`) and 6 dev (`@astrojs/check`, `typescript`, `tailwindcss`, `eslint`, `typescript-eslint`, `eslint-plugin-astro`).
 
 - Don't add a package unless code imports it. `@types/node` is deliberately absent (no Node APIs are used in `src/`).
-- No `overrides` block. Transitive dev-only advisories (e.g. `minimatch` under `typescript-eslint`) are dismissed in GitHub rather than pinned.
+- No `overrides` block. Transitive dev-only advisories are dismissed in GitHub rather than pinned.
 - There is no `dependabot.yml`; Dependabot PRs come from repo settings. Close any that bump packages no longer in `package-lock.json`.
 
 ## Commands
