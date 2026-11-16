@@ -12,14 +12,14 @@ Personal portfolio website for Pratik Karanje. Static Astro site deployed to Git
 | Fonts | `@fontsource` — Space Grotesk (body), Urbanist (display), Instrument Serif italic (accent) |
 | Smooth scroll | Lenis (`src/components/BackToTop.astro`) |
 | Lint | ESLint 10 flat config + `typescript-eslint` + `eslint-plugin-astro` |
-| Node | 26 LTS (`.nvmrc`, `engines >=26`, enforced by `engine-strict` in `.npmrc`), CI uses `node-version-file` |
+| Node | 26 LTS (`.nvmrc`, `engines >=26.13.1 <27`, enforced by `engine-strict` in `.npmrc`), CI uses `node-version-file` |
 
 ### Dependencies
 
-The dependency list is intentionally minimal: 6 runtime (`astro`, `@tailwindcss/vite`, `lenis`, 3× `@fontsource/*`) and 6 dev (`@astrojs/check`, `typescript`, `tailwindcss`, `eslint`, `typescript-eslint`, `eslint-plugin-astro`).
+`package.json` is kept aligned with [giilab.github.io](https://github.com/giilab/giilab.github.io) (same scripts, dependencies, ranges and `overrides`); only `name`/`version` differ. 6 runtime (`astro`, `@tailwindcss/vite`, `lenis`, 3× `@fontsource/*`) and 8 dev (`@astrojs/check`, `@types/node`, `axe-core`, `typescript`, `tailwindcss`, `eslint`, `typescript-eslint`, `eslint-plugin-astro`).
 
-- Don't add a package unless code imports it. `@types/node` is deliberately absent (no Node APIs are used in `src/`).
-- No `overrides` block. Transitive dev-only advisories are dismissed in GitHub rather than pinned.
+- `@types/node` major tracks the Node major in `.nvmrc` (currently `^26`).
+- `overrides` pins `minimatch` to `^11` across the tree to clear a transitive advisory; keep it until upstream deps require v11 themselves.
 - There is no `dependabot.yml`; Dependabot PRs come from repo settings. Close any that bump packages no longer in `package-lock.json`.
 
 ## Commands

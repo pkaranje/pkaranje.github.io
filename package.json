@@ -2,9 +2,8 @@
   "name": "pkaranje.github.io",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "engines": {
-    "node": ">=26"
+    "node": ">=26.13.1 <27"
   },
   "scripts": {
     "dev": "astro dev",
@@ -23,10 +22,16 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@types/node": "^26.6.6",
+    "axe-core": "^4.14.0",
     "eslint": "^10.14.0",
     "eslint-plugin-astro": "^3.2.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^5",
     "typescript-eslint": "^8.72.1"
+  },
+  "type": "module",
+  "overrides": {
+    "minimatch": "^11.0.3"
   }
 }
