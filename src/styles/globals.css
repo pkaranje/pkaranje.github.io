@@ -161,7 +161,6 @@
     width: max-content;
     animation: marquee var(--marquee-duration, 40s) linear infinite;
   }
-  .marquee-reverse { animation-direction: reverse; }
   .marquee:hover .marquee-track { animation-play-state: paused; }
   .marquee-copy { display: flex; gap: 0.6rem; padding-right: 0.6rem; }
   @keyframes marquee { to { transform: translateX(-50%); } }
@@ -221,11 +220,9 @@
   .btn { @apply inline-flex items-center gap-2.5 rounded-full px-[30px] py-[15px] text-[0.95rem] font-semibold tracking-[0.01em] transition-[transform,background-color,color,border-color] duration-[350ms] ease-[var(--ease-brand)] hover:-translate-y-0.5; }
   .btn-primary { @apply bg-accent text-on-accent hover:scale-[1.02]; }
   .btn-ghost { @apply border border-line-strong text-text hover:border-accent-ink hover:text-accent-ink; }
-  .btn-invert { @apply bg-white text-[#1d4ed8] hover:scale-[1.02]; }
   .btn-arrow { @apply transition-transform duration-[350ms] ease-[var(--ease-brand)] group-hover:translate-x-1; }
   .eyebrow { @apply inline-flex items-center gap-2.5 text-[0.78rem] font-medium tracking-[0.01em] text-muted; }
   .eyebrow-dot { @apply h-2 w-2 shrink-0 rounded-full bg-accent; }
-  .big-number { @apply block font-[family-name:var(--font-display)] text-[3rem] font-extrabold leading-none tracking-[-0.05em] text-accent-ink; }
 }
 
 @layer utilities {
