@@ -7,12 +7,20 @@ Personal portfolio website for Pratik Karanje. Static Astro site deployed to Git
 | Layer | Tool |
 | --- | --- |
 | Framework | Astro 7 (static output, no UI framework, `.astro` components only) |
-| Language | TypeScript (strict, `astro/tsconfigs/strict`) |
+| Language | TypeScript 5 (strict, `astro/tsconfigs/strict`), checked by `astro check` (`@astrojs/check`) |
 | Styling | Tailwind CSS 4 via `@tailwindcss/vite` — config lives in `src/styles/globals.css` (`@theme inline`), there is no `tailwind.config.js` |
 | Fonts | `@fontsource` — Space Grotesk (body), Urbanist (display), Instrument Serif italic (accent) |
 | Smooth scroll | Lenis (`src/components/BackToTop.astro`) |
 | Lint | ESLint 10 flat config + `typescript-eslint` + `eslint-plugin-astro` |
-| Node | 22 (`.nvmrc`), CI uses `node-version-file` |
+| Node | 22 (`.nvmrc`, `engines >=22.12.0`, enforced by `engine-strict` in `.npmrc`), CI uses `node-version-file` |
+
+### Dependencies
+
+The dependency list is intentionally minimal: 6 runtime (`astro`, `@tailwindcss/vite`, `lenis`, 3× `@fontsource/*`) and 6 dev (`@astrojs/check`, `typescript`, `tailwindcss`, `eslint`, `typescript-eslint`, `eslint-plugin-astro`).
+
+- Don't add a package unless code imports it. `@types/node` is deliberately absent (no Node APIs are used in `src/`).
+- No `overrides` block. Transitive dev-only advisories (e.g. `minimatch` under `typescript-eslint`) are dismissed in GitHub rather than pinned.
+- There is no `dependabot.yml`; Dependabot PRs come from repo settings. Close any that bump packages no longer in `package-lock.json`.
 
 ## Commands
 
@@ -69,7 +77,7 @@ Nav sections are `NAV` in `src/lib/site.ts`; each `id` must match a section `id`
 - **Tokens:** use semantic Tailwind colours from `globals.css` — `bg`, `surface`, `elevated`, `text`, `muted`, `faint`, `line`, `line-strong`, `accent`, `accent-ink`, `accent-soft`, `on-accent`. Never raw greys; they break dark mode.
 - **Theme:** `data-theme="light|dark"` on `<html>`; `dark:` variant is wired to it. Inline script in `Base.astro` sets it before paint.
 - **Typography classes:** `.t-hero`, `.t-h2`, `.t-h3`, `.t-lead`; accent phrase = `<span class="serif accent">…</span>`.
-- **Components:** `.wrap` (Container), `.card` (Card), `.btn btn-primary|btn-ghost` (ButtonLink), `.eyebrow` (Eyebrow), `.f-heading` / `.f-link` (footer).
+- **Components:** `.wrap` (Container), `.card` (Card), `.btn btn-primary|btn-ghost` (ButtonLink `variant="primary"` default, or `"ghost"`), `.eyebrow` (Eyebrow), `.f-heading` / `.f-link` (footer).
 - **Section heading pattern:** `<SectionHead eyebrow="…" lead="…" wide>Plain words <span class="serif accent">accent words.</span></SectionHead>`
 - **Scroll reveal:** add `data-reveal` to an element; it fades up once on entering the viewport. Disabled under reduced motion and without JS.
 - **Motion:** respect `prefers-reduced-motion`; infinite animations must be stopped in the reduced-motion block at the end of `globals.css`.
@@ -80,7 +88,9 @@ Nav sections are `NAV` in `src/lib/site.ts`; each `id` must match a section `id`
 
 ## Deployment
 
-Pushing to `main` triggers `.github/workflows/deploy.yml`: `npm ci` → lint → typecheck → build → upload `dist/` → deploy to `https://pkaranje.github.io`. GitHub Pages source must be **GitHub Actions**.
+Pushing to `main` triggers `.github/workflows/deploy.yml`: `npm ci` → lint → typecheck → build → upload `dist/` → deploy to `https://pkaranje.github.io`. GitHub Pages source must be **GitHub Actions** (so no `.nojekyll` is needed).
+
+`.claude/settings.local.json` is personal and gitignored; don't commit it.
 
 ## Known Constraints
 
