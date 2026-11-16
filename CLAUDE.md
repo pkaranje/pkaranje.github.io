@@ -16,7 +16,7 @@ Personal portfolio website for Pratik Karanje. Static Astro site deployed to Git
 
 ### Dependencies
 
-`package.json` is kept aligned with [giilab.github.io](https://github.com/giilab/giilab.github.io) (same scripts, dependencies, ranges and `overrides`); only `name`/`version` differ. 6 runtime (`astro`, `@tailwindcss/vite`, `lenis`, 3× `@fontsource/*`) and 8 dev (`@astrojs/check`, `@types/node`, `axe-core`, `typescript`, `tailwindcss`, `eslint`, `typescript-eslint`, `eslint-plugin-astro`).
+`package.json` is kept aligned with [giilab.github.io](https://github.com/giilab/giilab.github.io) (same scripts, dependencies, ranges and `overrides`); only `name` differs. 6 runtime (`astro`, `@tailwindcss/vite`, `lenis`, 3× `@fontsource/*`) and 8 dev (`@astrojs/check`, `@types/node`, `axe-core`, `typescript`, `tailwindcss`, `eslint`, `typescript-eslint`, `eslint-plugin-astro`).
 
 - `@types/node` major tracks the Node major in `.nvmrc` (currently `^26`).
 - `overrides` pins `minimatch` to `^11` across the tree to clear a transitive advisory; keep it until upstream deps require v11 themselves.
