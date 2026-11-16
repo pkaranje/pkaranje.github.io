@@ -12,7 +12,7 @@ Personal portfolio website for Pratik Karanje. Static Astro site deployed to Git
 | Fonts | `@fontsource` — Space Grotesk (body), Urbanist (display), Instrument Serif italic (accent) |
 | Smooth scroll | Lenis (`src/components/BackToTop.astro`) |
 | Lint | ESLint 10 flat config + `typescript-eslint` + `eslint-plugin-astro` |
-| Node | 22 (`.nvmrc`, `engines >=22.12.0`, enforced by `engine-strict` in `.npmrc`), CI uses `node-version-file` |
+| Node | 26 LTS (`.nvmrc`, `engines >=26`, enforced by `engine-strict` in `.npmrc`), CI uses `node-version-file` |
 
 ### Dependencies
 
