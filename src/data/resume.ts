@@ -19,6 +19,7 @@ export const skills = [
     items: [
       "Python",
       "Flask",
+      "FastAPI",
       "Django",
       "Go",
       "Node.js",
@@ -215,6 +216,7 @@ export const currentFocus =
 export const techStack: [name: string, logo: string][] = [
   ["Python", "python"],
   ["AWS", "aws"],
+  ["FastAPI", "fastapi"],
   ["Django", "django"],
   ["Go", "go"],
   ["Node.js", "nodejs"],
