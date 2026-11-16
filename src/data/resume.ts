@@ -10,7 +10,7 @@ export const personal = {
   whatsapp: "https://wa.me/919028735097",
   location: "Pune, India",
   summary:
-    "Engineering Lead and Solution Architect with 12+ years of experience building backend platforms, SaaS products, and cloud-native applications using Python and AWS technologies. Experience spans healthcare, IoT, product engineering, and open-source environments. Specializes in backend systems, platform development, cloud solutions, and engineering delivery.",
+    "Engineering Lead and Solutions Architect with 12+ years of experience building backend platforms, SaaS products, and cloud-native applications using Python and AWS technologies. Experience spans healthcare, IoT, product engineering, and open-source environments. Specializes in backend systems, platform development, cloud solutions, and engineering delivery.",
 };
 
 export const skills = [
@@ -100,7 +100,7 @@ export const experience = [
     company: "Equations Work | LiveHealth | iauro Systems",
     period: "2013 – 2019",
     highlights: [
-      "Built backend platforms for healthcare, SaaS, IoT, and product-based applications using Django, Node.js, Angular, PostgreSQL",
+      "Built backend platforms for healthcare, SaaS, IoT, and product-based applications using Django, Node.js, Angular, and PostgreSQL",
       "Led engineering teams through sprint planning, technical delivery, code reviews, and mentoring",
       "Designed scalable REST and GraphQL APIs supporting responsive web applications",
       "Awarded 'Most Dedicated Software Professional' at Equations Work",
