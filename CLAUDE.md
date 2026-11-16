@@ -16,10 +16,11 @@ Personal portfolio website for Pratik Karanje. Static Astro site deployed to Git
 
 ### Dependencies
 
-`package.json` is kept aligned with [giilab.github.io](https://github.com/giilab/giilab.github.io) (same scripts, dependencies, ranges and `overrides`); only `name` differs. 6 runtime (`astro`, `@tailwindcss/vite`, `lenis`, 3× `@fontsource/*`) and 8 dev (`@astrojs/check`, `@types/node`, `axe-core`, `typescript`, `tailwindcss`, `eslint`, `typescript-eslint`, `eslint-plugin-astro`).
+`package.json` is kept aligned with [giilab.github.io](https://github.com/giilab/giilab.github.io) (same scripts, dependencies, ranges and `overrides`); only `name` and `allowScripts` differ. 6 runtime (`astro`, `@tailwindcss/vite`, `lenis`, 3× `@fontsource/*`) and 8 dev (`@astrojs/check`, `@types/node`, `axe-core`, `typescript`, `tailwindcss`, `eslint`, `typescript-eslint`, `eslint-plugin-astro`).
 
 - `@types/node` major tracks the Node major in `.nvmrc` (currently `^26`).
 - `overrides` pins `minimatch` to `^11` across the tree to clear a transitive advisory; keep it until upstream deps require v11 themselves.
+- `allowScripts` records install-script decisions (npm 11 blocks dependency install scripts by default). `fsevents` is denied: it ships a prebuilt binary and is macOS-only. If `npm ci` warns about a new package, review it, then run `npm install-scripts approve|deny <pkg>`.
 - There is no `dependabot.yml`; Dependabot PRs come from repo settings. Close any that bump packages no longer in `package-lock.json`.
 
 ## Commands
