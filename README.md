@@ -21,7 +21,7 @@ Or use `make` (run `make` alone to list targets): `make setup`, `make dev`, `mak
 
 ## Editing content
 
-All résumé content lives in `src/data/resume.ts`. Site-level settings (URL, résumé PDF
+All Resume content lives in `src/data/resume.ts`. Site-level settings (URL, Resume PDF
 paths, nav sections) live in `src/lib/site.ts`. `robots.txt`, `sitemap.xml` and
 `llms.txt` are generated from these at build time.
 

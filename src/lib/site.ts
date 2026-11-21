@@ -1,6 +1,6 @@
 import { personal } from "@/data/resume";
 
-/** Site-level settings. Résumé content lives in src/data/resume.ts. */
+/** Site-level settings. Resume content lives in src/data/resume.ts. */
 export const SITE = {
   name: personal.name,
   url: "https://pkaranje.github.io",
@@ -33,4 +33,5 @@ export const NAV = [
 ] as const;
 
 /** "github.com/pkaranje" from "https://github.com/pkaranje". */
-export const bareUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+export const bareUrl = (url: string) =>
+  url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");

@@ -13,7 +13,7 @@ export function GET() {
     "## Links",
     "",
     `- [Portfolio](${SITE.url}/)`,
-    `- [Résumé (PDF)](${SITE.url}${SITE.resume})`,
+    `- [Resume (PDF)](${SITE.url}${SITE.resume})`,
     `- [GitHub](${personal.github})`,
     `- [LinkedIn](${personal.linkedin})`,
     `- [WhatsApp](${personal.whatsapp})`,

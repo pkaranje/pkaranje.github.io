@@ -16,7 +16,7 @@ const SOCIAL = [
   <Container>
     <div class="grid grid-cols-1 gap-[clamp(28px,3.5vw,48px)] pb-[clamp(48px,6vw,72px)] sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto_auto] lg:gap-x-[clamp(40px,5vw,80px)]">
       <div>
-        <a href="/" aria-label="Home"><Lockup size={46} /></a>
+        <a href="/"><Lockup size={46} /></a>
         <p class="mt-[18px] max-w-[22rem] text-[0.9rem] font-semibold text-text">{personal.title}</p>
         <p class="mt-2 max-w-[22rem] text-[0.9rem] text-muted">{personal.subtitle}</p>
         <address class="mt-[18px] flex items-center gap-2 text-[0.9rem] not-italic text-text">
@@ -34,8 +34,8 @@ const SOCIAL = [
         </ul>
       </nav>
 
-      <nav aria-label="Résumé">
-        <h2 class="f-heading">Résumé</h2>
+      <nav aria-label="Resume">
+        <h2 class="f-heading">Resume</h2>
         <ul class="grid gap-[11px]">
           <li><a href={SITE.resume} class="f-link" download>One-page CV (PDF)</a></li>
           <li><a href={SITE.resumeDetailed} class="f-link" download>Detailed CV (PDF)</a></li>

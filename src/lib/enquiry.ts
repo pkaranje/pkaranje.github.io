@@ -7,6 +7,9 @@
 export const ENDPOINT = "https://api.web3forms.com/submit";
 export const ACCESS_KEY = "40eb55ae-7bb0-4d50-8f2a-7b46146c2355";
 
+/** Max characters per field, enforced by maxlength in the form and re-checked before sending. */
+export const LIMITS = { name: 100, email: 254, phone: 20, message: 2000 } as const;
+
 export type Enquiry = {
   name: string;
   email: string;

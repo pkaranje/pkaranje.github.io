@@ -41,8 +41,8 @@ Always run `npm run lint && npm run typecheck && npm run build` before committin
 
 ```text
 src/
-├── data/resume.ts            # ★ Single source of truth for ALL résumé content
-├── lib/site.ts               # SITE config (url, résumé paths, theme key), NAV anchors, PageMeta, bareUrl()
+├── data/resume.ts            # ★ Single source of truth for ALL Resume content
+├── lib/site.ts               # SITE config (url, Resume paths, theme key), NAV anchors, PageMeta, bareUrl()
 ├── lib/enquiry.ts            # Enquiry form delivery via Web3Forms (public ACCESS_KEY) + send()
 ├── styles/globals.css        # Tailwind import, brand + semantic tokens, light/dark themes, component classes
 ├── layouts/Base.astro        # <head>/SEO/JSON-LD (Person), theme bootstrap, Header/Footer, scroll-reveal script
@@ -69,7 +69,7 @@ public/
 
 ## Content Updates
 
-**All résumé content lives in `src/data/resume.ts`.** Never hardcode content in components. Exports: `personal`, `skills`, `experience`, `projects`, `certifications`, `education`, `languages`, `stats`, `currentFocus`, `techStack` (`[name, logo]` pairs; logo is a file in `public/icons/tech/` without `.svg`), `enquiryTopics` (enquiry form dropdown). `personal.whatsapp` is a `wa.me` link used in the hero, contact section and footer.
+**All Resume content lives in `src/data/resume.ts`.** Never hardcode content in components. Exports: `personal`, `skills`, `experience`, `projects`, `certifications`, `education`, `languages`, `stats`, `currentFocus`, `techStack` (`[name, logo]` pairs; logo is a file in `public/icons/tech/` without `.svg`), `enquiryTopics` (enquiry form dropdown). `personal.whatsapp` is a `wa.me` link used in the hero, contact section and footer.
 
 Nav sections are `NAV` in `src/lib/site.ts`; each `id` must match a section `id` in `index.astro`.
 

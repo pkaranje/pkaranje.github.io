@@ -35,6 +35,9 @@
   --accent-2: #7c3aed;
   --accent-text: #1d4ed8;
   --accent-soft: rgb(37 99 235 / 0.1);
+  /* Status green for current roles; #166534 keeps 4.5:1+ on its own tint (--live-soft). */
+  --live: #166534;
+  --live-soft: rgb(22 101 52 / 0.1);
   --on-accent: #ffffff;
   --grain-opacity: 0.028;
 }
@@ -56,6 +59,8 @@
   --accent-2: #a78bfa;
   --accent-text: #60a5fa;
   --accent-soft: rgb(59 130 246 / 0.14);
+  --live: #4ade80;
+  --live-soft: rgb(74 222 128 / 0.14);
   /* The dark theme lightens the accent, so white on it is only 3.67:1.
      Dark ink on the lighter blue is 5.1:1 and matches the reference design. */
   --on-accent: #0b1220;
@@ -75,6 +80,8 @@
   --color-accent-2: var(--accent-2);
   --color-accent-ink: var(--accent-text);
   --color-accent-soft: var(--accent-soft);
+  --color-live: var(--live);
+  --color-live-soft: var(--live-soft);
   --color-on-accent: var(--on-accent);
   --color-brand-blue: var(--brand-blue);
   --color-brand-purple: var(--brand-purple);
@@ -256,6 +263,9 @@
   .live-dot { animation: live-dot 2s ease-in-out infinite; }
   @keyframes portrait-glow { 0%, 100% { opacity: 0.7; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1.04); } }
   @keyframes live-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  /* Lock the page behind an open modal dialog (experience details). */
+  html:has(dialog[open]) { overflow: hidden; }
 
   /* Scroll reveal: elements with [data-reveal] fade up once when they enter the viewport
      (script in Base.astro). Without JS, or with reduced motion, they are simply visible. */

@@ -1,13 +1,13 @@
 ---
 import { personal, enquiryTopics } from "@/data/resume";
-import { ENDPOINT, ACCESS_KEY } from "@/lib/enquiry";
+import { ENDPOINT, ACCESS_KEY, LIMITS } from "@/lib/enquiry";
 
 /**
  * Enquiry form, delivered through Web3Forms (src/lib/enquiry.ts). The script below
  * validates and sends with fetch; without JS the form still posts natively.
  */
 const FIELD =
-  "w-full rounded-xl border border-line bg-bg px-4 py-3 text-[0.95rem] text-text placeholder:text-faint focus:border-accent focus:outline-none";
+  "w-full rounded-xl border border-line bg-bg px-4 py-2.5 text-[0.95rem] text-text placeholder:text-faint focus:border-accent focus:outline-none";
 const LABEL = "mb-1.5 block text-[0.88rem] font-medium";
 const ERROR = "mt-1.5 text-[0.82rem] text-accent-ink";
 ---
@@ -21,37 +21,65 @@ const ERROR = "mt-1.5 text-[0.82rem] text-accent-ink";
     </button>
   </div>
 
-  <form action={ENDPOINT} method="post" novalidate class="grid gap-5">
+  <form action={ENDPOINT} method="post" novalidate class="grid gap-4">
     <input type="hidden" name="access_key" value={ACCESS_KEY} />
-    <div class="grid gap-5 sm:grid-cols-2">
+    <div class="grid gap-4 sm:grid-cols-2">
       <div>
         <label for="name" class={LABEL}>Your name <span class="text-accent-ink">*</span></label>
-        <input id="name" name="name" type="text" autocomplete="name" required class={FIELD} placeholder="Your name" />
+        <input id="name" name="name" type="text" autocomplete="name" required maxlength={LIMITS.name} class={FIELD} placeholder="Your name" />
         <p id="name-error" hidden class={ERROR}></p>
       </div>
       <div>
         <label for="email" class={LABEL}>Email <span class="text-accent-ink">*</span></label>
-        <input id="email" name="email" type="email" autocomplete="email" required class={FIELD} placeholder="you@company.com" />
+        <input id="email" name="email" type="email" autocomplete="email" required maxlength={LIMITS.email} class={FIELD} placeholder="you@company.com" />
         <p id="email-error" hidden class={ERROR}></p>
       </div>
       <div>
         <label for="phone" class={LABEL}>Phone / WhatsApp <span class="text-faint">(optional)</span></label>
-        <input id="phone" name="phone" type="tel" autocomplete="tel" class={FIELD} placeholder="+91 98765 43210" />
+        <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength={LIMITS.phone} class={FIELD} placeholder="+91 98765 43210" />
         <p id="phone-error" hidden class={ERROR}></p>
       </div>
       <div>
         <label for="topic" class={LABEL}>What&rsquo;s this about? <span class="text-faint">(optional)</span></label>
-        <select id="topic" name="topic" class={FIELD}>
-          <option value="" selected>Choose a topic</option>
-          {enquiryTopics.map((t) => <option value={t}>{t}</option>)}
-        </select>
+        <!-- native arrow hidden so the chevron sits inside the field padding, matching the inputs -->
+        <div class="relative">
+          <select id="topic" name="topic" class={`${FIELD} cursor-pointer appearance-none pr-11`}>
+            <option value="" selected>Choose a topic</option>
+            {enquiryTopics.map((t) => <option value={t}>{t}</option>)}
+          </select>
+          <svg
+            aria-hidden="true"
+            class="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-muted"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </div>
       </div>
     </div>
 
     <div>
       <label for="message" class={LABEL}>Message <span class="text-accent-ink">*</span></label>
-      <textarea id="message" name="message" rows="5" required class={FIELD} placeholder="A few lines about the role, project or idea."></textarea>
-      <p id="message-error" hidden class={ERROR}></p>
+      <textarea
+        id="message"
+        name="message"
+        rows="3"
+        required
+        maxlength={LIMITS.message}
+        class={`${FIELD} max-h-[20rem] min-h-[5.5rem] resize-y`}
+        placeholder="A few lines about the role, project or idea."
+      ></textarea>
+      <div class="flex items-start justify-between gap-3">
+        <p id="message-error" hidden class={ERROR}></p>
+        <p data-count aria-live="polite" class="mt-1.5 ml-auto shrink-0 text-[0.8rem] text-muted">0 / {LIMITS.message}</p>
+      </div>
     </div>
 
     <!-- honeypot: hidden from people, tempting to bots. Web3Forms also rejects it server-side. -->
@@ -68,7 +96,7 @@ const ERROR = "mt-1.5 text-[0.82rem] text-accent-ink";
     <div class="flex flex-wrap items-center gap-4">
       <button
         type="submit"
-        class="group brand-gradient inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-[0.95rem] font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+        class="group brand-gradient inline-flex items-center gap-2.5 rounded-full px-7 py-3 text-[0.95rem] font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
       >
         <span aria-hidden="true" class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white group-disabled:inline-block"></span>
         <span class="group-disabled:hidden">Send message <span aria-hidden="true">&rarr;</span></span>
@@ -80,7 +108,7 @@ const ERROR = "mt-1.5 text-[0.82rem] text-accent-ink";
 </div>
 
 <script>
-  import { send, type Enquiry } from "@/lib/enquiry";
+  import { send, LIMITS, type Enquiry } from "@/lib/enquiry";
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   // Loose on purpose: formats vary too much worldwide for anything stricter.
@@ -91,11 +119,13 @@ const ERROR = "mt-1.5 text-[0.82rem] text-accent-ink";
   function validate(d: Enquiry): Partial<Record<Field, string>> {
     const e: Partial<Record<Field, string>> = {};
     if (!d.name) e.name = "Please tell me your name.";
+    else if (d.name.length > LIMITS.name) e.name = `Please keep your name under ${LIMITS.name} characters.`;
     if (!d.email) e.email = "I need an email address to reply to.";
-    else if (!EMAIL_RE.test(d.email)) e.email = "That doesn't look like a valid email address.";
+    else if (d.email.length > LIMITS.email || !EMAIL_RE.test(d.email)) e.email = "That doesn't look like a valid email address.";
     if (d.phone && !PHONE_RE.test(d.phone)) e.phone = "Please use digits and a country code, like +91 98765 43210.";
     if (!d.message) e.message = "Please add a short message.";
     else if (d.message.length < 20) e.message = "A little more detail helps: 20 characters or more.";
+    else if (d.message.length > LIMITS.message) e.message = `Please keep it under ${LIMITS.message} characters.`;
     return e;
   }
 
@@ -105,6 +135,10 @@ const ERROR = "mt-1.5 text-[0.82rem] text-accent-ink";
   const serverError = root.querySelector<HTMLElement>("[data-server-error]")!;
   const submit = form.querySelector<HTMLButtonElement>("[type=submit]")!;
   const live = form.querySelector<HTMLElement>("[data-live]")!;
+  const message = form.querySelector<HTMLTextAreaElement>("#message")!;
+  const count = form.querySelector<HTMLElement>("[data-count]")!;
+  const updateCount = () => (count.textContent = `${message.value.length} / ${LIMITS.message}`);
+  message.addEventListener("input", updateCount);
 
   function showErrors(errors: Partial<Record<Field, string>>) {
     for (const f of FIELDS) {
@@ -144,6 +178,7 @@ const ERROR = "mt-1.5 text-[0.82rem] text-accent-ink";
     try {
       await send(data);
       form.reset();
+      updateCount();
       form.hidden = true;
       success.hidden = false;
     } catch {
